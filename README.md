@@ -1,6 +1,6 @@
 # hget
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/clementi/hget/ci)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/clementi/hget/ci)](https://github.com/clementi/hget/actions/workflows/ci.yml)
 
 This project is my personal project to learn golang to build something useful.
 
