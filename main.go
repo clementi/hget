@@ -1,12 +1,14 @@
 package main
 
 import (
-	"flag"
+	"log"
 	"os"
 	"os/signal"
 	"path/filepath"
-	"runtime"
+	"strings"
 	"syscall"
+
+	"github.com/urfave/cli/v2"
 )
 
 var displayProgress = true
@@ -14,49 +16,101 @@ var displayProgress = true
 func main() {
 	var err error
 
-	conn    := flag.Int("n", runtime.NumCPU(), "connection")
-	skiptls := flag.Bool("skip-tls", true, "skip verify certificate for https")
+	cli.AppHelpTemplate = strings.Replace(cli.AppHelpTemplate, "[arguments...]", "[URL]", -1)
 
-	flag.Parse()
-	args := flag.Args()
-	if len(args) < 1 {
-		Errorln("url is required")
-		usage()
-		os.Exit(1)
+	app := cli.App{
+		Name:  "hget",
+		Usage: "Multipart resumable downloads",
+		Action: func(ctx *cli.Context) error {
+
+			if !ctx.Args().Present() {
+				cli.ShowAppHelpAndExit(ctx, 1)
+			}
+
+			url := ctx.Args().Get(0)
+
+			Execute(url, nil, int(ctx.Uint("connections")), ctx.Bool("skip-tls"))
+			return nil
+		},
+		Version:         "2.0.0",
+		HideHelpCommand: true,
+		Commands: []*cli.Command{
+			{
+				Name:    "tasks",
+				Aliases: []string{"t"},
+				Usage:   "show current tasks",
+			},
+			{
+				Name:    "resume",
+				Aliases: []string{"r"},
+				Usage:   "resume task",
+			},
+		},
+		Flags: []cli.Flag{
+			&cli.UintFlag{
+				Name:     "connections",
+				Value:    4,
+				Required: false,
+				Usage:    "number of connections",
+				Aliases:  []string{"n"},
+			},
+			&cli.BoolFlag{
+				Name:     "skip-tls",
+				Value:    false,
+				Required: false,
+				Usage:    "do not verify certificate for HTTPS",
+				Aliases:  []string{"s"},
+			},
+		},
 	}
 
-	command := args[0]
-	if command == "tasks" {
-		if err = TaskPrint(); err != nil {
-			Errorf("%v\n", err)
-		}
-		return
-	} else if command == "resume" {
-		if len(args) < 2 {
-			Errorln("downloading task name is required")
-			usage()
-			os.Exit(1)
-		}
-
-		var task string
-		if IsUrl(args[1]) {
-			task = TaskFromUrl(args[1])
-		} else {
-			task = args[1]
-		}
-
-		state, err := Resume(task)
-		FatalCheck(err)
-		Execute(state.Url, state, *conn, *skiptls)
-		return
-	} else {
-		if ExistDir(FolderOf(command)) {
-			Warnf("Downloading task already exist, remove first \n")
-			err := os.RemoveAll(FolderOf(command))
-			FatalCheck(err)
-		}
-		Execute(command, nil, *conn, *skiptls)
+	if err = app.Run(os.Args); err != nil {
+		log.Fatal(err)
 	}
+
+	// conn := flag.Int("n", runtime.NumCPU(), "connection")
+	// skiptls := flag.Bool("skip-tls", true, "skip verify certificate for https")
+
+	// flag.Parse()
+	// args := flag.Args()
+	// if len(args) < 1 {
+	// 	Errorln("url is required")
+	// 	usage()
+	// 	os.Exit(1)
+	// }
+
+	// command := args[0]
+	// if command == "tasks" {
+	// 	if err = TaskPrint(); err != nil {
+	// 		Errorf("%v\n", err)
+	// 	}
+	// 	return
+	// } else if command == "resume" {
+	// 	if len(args) < 2 {
+	// 		Errorln("downloading task name is required")
+	// 		usage()
+	// 		os.Exit(1)
+	// 	}
+
+	// 	var task string
+	// 	if IsUrl(args[1]) {
+	// 		task = TaskFromUrl(args[1])
+	// 	} else {
+	// 		task = args[1]
+	// 	}
+
+	// 	state, err := Resume(task)
+	// 	FatalCheck(err)
+	// 	Execute(state.Url, state, *conn, *skiptls)
+	// 	return
+	// } else {
+	// 	if ExistDir(FolderOf(command)) {
+	// 		Warnf("Downloading task already exist, remove first \n")
+	// 		err := os.RemoveAll(FolderOf(command))
+	// 		FatalCheck(err)
+	// 	}
+	// 	Execute(command, nil, *conn, *skiptls)
+	// }
 }
 
 func Execute(url string, state *State, conn int, skiptls bool) {
@@ -128,12 +182,4 @@ func Execute(url string, state *State, conn int, skiptls bool) {
 			}
 		}
 	}
-}
-
-func usage() {
-	Printf(`Usage:
-hget [URL] [-n connection] [-skip-tls true]
-hget tasks
-hget resume [TaskName]
-`)
 }
