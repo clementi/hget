@@ -42,7 +42,7 @@ func main() {
 				Name: "clementi (https://github.com/clementi)",
 			},
 		},
-		Version:         "2.0.0",
+		Version:         "2.0.0-beta1",
 		HideHelpCommand: true,
 		Commands: []*cli.Command{
 			{
