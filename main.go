@@ -72,7 +72,7 @@ func main() {
 							if err := Delete(task); err != nil {
 								return err
 							}
-							return nil // TODO: Delete tasks
+							return nil
 						},
 					},
 					{
