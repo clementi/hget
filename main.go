@@ -65,8 +65,7 @@ func main() {
 						Action: func(ctx *cli.Context) error {
 							if !ctx.Args().Present() {
 								fmt.Println("task name required")
-								fmt.Println()
-								cli.ShowCommandHelpAndExit(ctx, "resume", 2)
+								os.Exit(2)
 							}
 							task := ctx.Args().First()
 							if err := Delete(task); err != nil {
@@ -82,8 +81,7 @@ func main() {
 						Action: func(ctx *cli.Context) error {
 							if !ctx.Args().Present() {
 								fmt.Println("task name required")
-								fmt.Println()
-								cli.ShowCommandHelpAndExit(ctx, "resume", 2)
+								os.Exit(2)
 							}
 							task := ctx.Args().First()
 							state, err := Resume(task)

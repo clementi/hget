@@ -60,6 +60,9 @@ func Read(task string) (*State, error) {
 
 func Delete(task string) error {
 	path := filepath.Join(os.Getenv("HOME"), dataFolder, task)
+	if _, err := os.Stat(path); err != nil {
+		return err
+	}
 	log.Printf("Deleting task %s\n", path)
 	return os.RemoveAll(path)
 }
