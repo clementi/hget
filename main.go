@@ -48,29 +48,52 @@ func main() {
 			{
 				Name:    "tasks",
 				Aliases: []string{"t"},
-				Usage:   "show current tasks",
-				Action: func(ctx *cli.Context) error {
-					return TaskPrint()
-				},
-			},
-			{
-				Name:    "resume",
-				Aliases: []string{"r"},
-				Usage:   "resume task",
-				Action: func(ctx *cli.Context) error {
-					if !ctx.Args().Present() {
-						fmt.Println("task name required")
-						fmt.Println()
-						cli.ShowCommandHelpAndExit(ctx, "resume", 2)
-					}
-					task := ctx.Args().First()
-					log.Printf("Task is %s\n", task)
-					state, err := Resume(task)
-					if err != nil {
-						return err
-					}
-					Execute(state.Url, state, int(ctx.Uint("connections")), ctx.Bool("skip-tls"))
-					return nil
+				Usage:   "manage current tasks",
+				Subcommands: []*cli.Command{
+					{
+						Name:    "list",
+						Aliases: []string{"ls"},
+						Usage:   "list tasks",
+						Action: func(ctx *cli.Context) error {
+							return TaskPrint()
+						},
+					},
+					{
+						Name:    "delete",
+						Aliases: []string{"del", "d", "remove", "rm"},
+						Usage:   "delete task",
+						Action: func(ctx *cli.Context) error {
+							if !ctx.Args().Present() {
+								fmt.Println("task name required")
+								fmt.Println()
+								cli.ShowCommandHelpAndExit(ctx, "resume", 2)
+							}
+							task := ctx.Args().First()
+							if err := Delete(task); err != nil {
+								return err
+							}
+							return nil // TODO: Delete tasks
+						},
+					},
+					{
+						Name:    "resume",
+						Aliases: []string{"r"},
+						Usage:   "resume task",
+						Action: func(ctx *cli.Context) error {
+							if !ctx.Args().Present() {
+								fmt.Println("task name required")
+								fmt.Println()
+								cli.ShowCommandHelpAndExit(ctx, "resume", 2)
+							}
+							task := ctx.Args().First()
+							state, err := Resume(task)
+							if err != nil {
+								return err
+							}
+							Execute(state.Url, state, int(ctx.Uint("connections")), ctx.Bool("skip-tls"))
+							return nil
+						},
+					},
 				},
 			},
 		},

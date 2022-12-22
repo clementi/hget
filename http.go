@@ -51,7 +51,7 @@ func NewHttpDownloader(url string, par int, skipTls bool) *HttpDownloader {
 	FatalCheck(err)
 
 	ipstr := FilterIPV4(ips)
-	log.Printf("Resolved IP(s): %s\n", strings.Join(ipstr, " | "))
+	log.Printf("Resolved IP(s): %s\n", strings.Join(ipstr, ", "))
 
 	req, err := http.NewRequest("GET", url, nil)
 	FatalCheck(err)

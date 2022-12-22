@@ -57,3 +57,9 @@ func Read(task string) (*State, error) {
 	err = json.Unmarshal(bytes, s)
 	return s, err
 }
+
+func Delete(task string) error {
+	path := filepath.Join(os.Getenv("HOME"), dataFolder, task)
+	log.Printf("Deleting task %s\n", path)
+	return os.RemoveAll(path)
+}

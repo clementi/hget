@@ -23,7 +23,7 @@ func TaskPrint() error {
 	}
 
 	folderString := strings.Join(folders, "\n")
-	log.Printf("Tasks: \n")
+	log.Println("Tasks:")
 	fmt.Println(folderString)
 
 	return nil
