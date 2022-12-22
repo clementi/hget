@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -10,7 +9,7 @@ import (
 )
 
 func TaskPrint() error {
-	downloading, err := ioutil.ReadDir(filepath.Join(os.Getenv("HOME"), dataFolder))
+	downloading, err := os.ReadDir(filepath.Join(os.Getenv("HOME"), dataFolder))
 	if err != nil {
 		return err
 	}

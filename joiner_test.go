@@ -1,11 +1,9 @@
 package main
 
 import (
-	"testing"
-	"io/ioutil"
 	"os"
+	"testing"
 )
-
 
 func TestJoiner(t *testing.T) {
 	displayProgress = false
@@ -14,7 +12,7 @@ func TestJoiner(t *testing.T) {
 
 	files := [2]string{"file1", "file2"}
 	JoinFile(files[:], "join")
-	content, err := ioutil.ReadFile("join")
+	content, err := os.ReadFile("join")
 	if err != nil {
 		t.Fatalf("err should be nil")
 	}
@@ -26,8 +24,8 @@ func TestJoiner(t *testing.T) {
 }
 
 func prepare() {
-	ioutil.WriteFile("file1", []byte("file1"), 0600)
-	ioutil.WriteFile("file2", []byte("file2"), 0600)
+	os.WriteFile("file1", []byte("file1"), 0600)
+	os.WriteFile("file2", []byte("file2"), 0600)
 }
 
 func clean() {

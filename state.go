@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -42,13 +41,13 @@ func (s *State) Save() error {
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(filepath.Join(folder, stateFileName), j, 0644)
+	return os.WriteFile(filepath.Join(folder, stateFileName), j, 0644)
 }
 
 func Read(task string) (*State, error) {
 	file := filepath.Join(os.Getenv("HOME"), dataFolder, task, stateFileName)
 	log.Printf("Getting data from %s\n", file)
-	bytes, err := ioutil.ReadFile(file)
+	bytes, err := os.ReadFile(file)
 	if err != nil {
 		return nil, err
 	}
