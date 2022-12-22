@@ -1,6 +1,7 @@
 # hget
 
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/clementi/hget/ci.yml)](https://github.com/clementi/hget/actions/workflows/ci.yml)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/clementi/hget)](https://github.com/clementi/hget/releases)
 
 hget is a command-line, multipart, resumable downloader. It is based on [the project by huydx](https://github.com/huydx/hget).
 
