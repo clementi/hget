@@ -1,18 +1,17 @@
+NAME=hget
 COMMIT = $$(git describe --always)
 
-deps:
-	@echo "====> Install dependencies..."
-	go get -d github.com/fatih/color
-	go get -d github.com/mattn/go-colorable
-	go get -d github.com/mattn/go-isatty
-	go get -d github.com/fatih/color
-	go get -d gopkg.in/cheggaaa/pb.v1
-	go get -d github.com/mattn/go-isatty
+build:
+	go build -ldflags "-X main.GitCommit=\"$(COMMIT)\"" -o bin/${NAME}
 
 clean:
-	@echo "====> Remove installed binary"
-	rm -f bin/hget
+	rm -f bin/*
 
-install: deps
-	@echo "====> Build hget in ./bin "
-	go build -ldflags "-X main.GitCommit=\"$(COMMIT)\"" -o bin/hget
+arch:
+	GOOS=darwin  GOARCH=amd64 go build -o bin/${NAME}-darwin-amd64
+	GOOS=darwin  GOARCH=arm64 go build -o bin/${NAME}-darwin-arm64
+	GOOS=freebsd GOARCH=amd64 go build -o bin/${NAME}-freebsd-amd64
+	GOOS=linux   GOARCH=amd64 go build -o bin/${NAME}linux-amd64
+	GOOS=netbsd  GOARCH=amd64 go build -o bin/${NAME}netbsd-amd64
+	GOOS=openbsd GOARCH=amd64 go build -o bin/${NAME}openbsd-amd64
+	GOOS=windows GOARCH=amd64 go build -o bin/${NAME}windows-amd64.exe
