@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -24,6 +25,8 @@ func main() {
 		Action: func(ctx *cli.Context) error {
 
 			if !ctx.Args().Present() {
+				fmt.Println("URL required")
+				fmt.Println()
 				cli.ShowAppHelpAndExit(ctx, 1)
 			}
 
