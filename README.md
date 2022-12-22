@@ -2,34 +2,48 @@
 
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/clementi/hget/ci.yml)](https://github.com/clementi/hget/actions/workflows/ci.yml)
 
-This project is my personal project to learn golang to build something useful.
+hget is a command-line, multipart, resumable downloader. It is based on [the project by huydx](https://github.com/huydx/hget).
 
 ![](https://i.gyazo.com/641166ab79e196e35d1a0ef3f9befd80.png)
 
 ## Install
 
 ```
-$ go get -d github.com/huydx/hget
-$ cd $GOPATH/src/github.com/huydx/hget
-$ make clean install
+go install github.com/clementi/hget@latest
 ```
-
-Binary file will be built at ./bin/hget, you can copy to /usr/bin or /usr/local/bin and even `alias wget hget` to replace wget totally :P
 
 ## Usage
 
 ```
-hget [Url] [-n parallel] [-skip-tls false] //to download url, with n connections, and not skip tls certificate
-hget tasks //get interrupted tasks
-hget resume [TaskName | URL] //to resume task
+NAME:
+   hget - Multipart resumable downloads
+
+USAGE:
+   hget [global options] command [command options] [URL]
+
+VERSION:
+   2.0.0
+
+AUTHORS:
+   huydx (https://github.com/huydx)
+   clementi (https://github.com/clementi)
+
+COMMANDS:
+   tasks, t  manage current tasks
+
+GLOBAL OPTIONS:
+   --connections value, -n value  number of connections (default: 4)
+   --skip-tls, -s                 do not verify certificate for HTTPS (default: false)
+   --help, -h                     show help (default: false)
+   --version, -v                  print the version (default: false)
 ```
 
-To interrupt any on-downloading process, just ctrl-c or ctrl-d at the middle of the download, hget will safely save your data and you will be able to resume later
+To interrupt any downloading process, just hit ctrl-c or ctrl-d during the download. hget will safely save your data to `$HOME/.hget` and you will be able to resume later.
 
-### Download
+<!-- ### Download
 ![](https://i.gyazo.com/89009c7f02fea8cb4cbf07ee5b75da0a.gif)
 
 ### Resume
 ![](https://i.gyazo.com/caa69808f6377421cb2976f323768dc4.gif)
-
+ -->
 
