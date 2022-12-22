@@ -27,7 +27,7 @@ USAGE:
    hget [global options] command [command options] [URL]
 
 VERSION:
-   2.0.0
+   2.0.0-beta1
 
 AUTHORS:
    huydx (https://github.com/huydx)
