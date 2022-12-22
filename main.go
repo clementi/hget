@@ -117,7 +117,6 @@ func main() {
 }
 
 func Execute(url string, state *State, conn int, skiptls bool) {
-	//otherwise is hget <URL> command
 	var err error
 
 	signal_chan := make(chan os.Signal, 1)
@@ -127,7 +126,7 @@ func Execute(url string, state *State, conn int, skiptls bool) {
 		syscall.SIGTERM,
 		syscall.SIGQUIT)
 
-	//set up parallel
+	// set up parallel
 
 	var files = make([]string, 0)
 	var parts = make([]Part, 0)
