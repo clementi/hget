@@ -9,21 +9,20 @@ import (
 )
 
 func TaskPrint() error {
-	downloading, err := os.ReadDir(filepath.Join(os.Getenv("HOME"), dataFolder))
+	entries, err := os.ReadDir(filepath.Join(os.Getenv("HOME"), dataFolder))
 	if err != nil {
 		return err
 	}
 
-	folders := make([]string, 0)
-	for _, d := range downloading {
-		if d.IsDir() {
-			folders = append(folders, d.Name())
+	taskNames := make([]string, 0)
+	for _, entry := range entries {
+		if entry.IsDir() {
+			taskNames = append(taskNames, entry.Name())
 		}
 	}
 
-	folderString := strings.Join(folders, "\n")
 	log.Println("Tasks:")
-	fmt.Println(folderString)
+	fmt.Println(strings.Join(taskNames, "\n"))
 
 	return nil
 }
