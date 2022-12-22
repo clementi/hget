@@ -38,7 +38,7 @@ func MkdirIfNotExist(folder string) error {
 	return nil
 }
 
-func ExistDir(folder string) bool {
+func DirExists(folder string) bool {
 	_, err := os.Stat(folder)
 	return err == nil
 }
@@ -49,27 +49,27 @@ func DisplayProgressBar() bool {
 
 func FolderOf(url string) string {
 	safePath := filepath.Join(os.Getenv("HOME"), dataFolder)
-	fullQualifyPath, err := filepath.Abs(filepath.Join(os.Getenv("HOME"), dataFolder, filepath.Base(url)))
+	fullyQualifiedPath, err := filepath.Abs(filepath.Join(safePath, filepath.Base(url)))
 	FatalCheck(err)
 
-	//must ensure full qualify path is CHILD of safe path
-	//to prevent directory traversal attack
-	//using Rel function to get relative between parent and child
-	//if relative join base == child, then child path MUST BE real child
-	relative, err := filepath.Rel(safePath, fullQualifyPath)
+	// must ensure fully qualified path is child of safe path
+	// to prevent directory traversal attack
+	// using Rel function to get relative between parent and child
+	// if relative join base == child, then child path MUST BE real child
+	relative, err := filepath.Rel(safePath, fullyQualifiedPath)
 	FatalCheck(err)
 
 	if strings.Contains(relative, "..") {
 		FatalCheck(errors.New("you may be a victim of directory traversal path attack"))
-		return "" //return is redundant be cause in fatal check we have panic, but compiler does not able to check
+		return "" // return is redundant because in fatal check we have panic, but compiler is not able to check
 	} else {
-		return fullQualifyPath
+		return fullyQualifiedPath
 	}
 }
 
 func TaskFromUrl(url string) string {
-	//task is just download file name
-	//so we get download file name on url
+	// task is just download file name
+	// so we get download file name on url
 	filename := filepath.Base(url)
 	return filename
 }

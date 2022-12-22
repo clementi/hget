@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -23,20 +24,20 @@ type Part struct {
 }
 
 func (s *State) Save() error {
-	//make temp folder
-	//only working in unix with env HOME
+	// make temp folder
+	// only working in unix with env HOME
 	folder := FolderOf(s.Url)
 	log.Printf("Saving current download data in %s\n", folder)
 	if err := MkdirIfNotExist(folder); err != nil {
 		return err
 	}
 
-	//move current downloading file to data folder
+	// move current downloading file to data folder
 	for _, part := range s.Parts {
 		os.Rename(part.Path, filepath.Join(folder, filepath.Base(part.Path)))
 	}
 
-	//save state file
+	// save state file
 	j, err := json.Marshal(s)
 	if err != nil {
 		return err
@@ -63,9 +64,10 @@ func Delete(task string) error {
 		return err
 	}
 	taskPath := filepath.Join(dataPath, task)
-	if _, err := os.Stat(taskPath); err != nil {
-		return err
+	if DirExists(taskPath) {
+		log.Printf("Deleting task %s\n", taskPath)
+		return os.RemoveAll(taskPath)
+	} else {
+		return fmt.Errorf("task '%s' does not exist", task)
 	}
-	log.Printf("Deleting task %s\n", taskPath)
-	return os.RemoveAll(taskPath)
 }

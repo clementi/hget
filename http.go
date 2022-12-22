@@ -14,8 +14,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/fatih/color"
-	pb "gopkg.in/cheggaaa/pb.v1"
+	pb "github.com/cheggaaa/pb/v3"
 )
 
 var (
@@ -61,7 +60,7 @@ func NewHttpDownloader(url string, par int, skipTls bool) *HttpDownloader {
 
 	if resp.Header.Get(acceptRangeHeader) == "" {
 		log.Printf("Target URL does not support range download. Fallback to parallel 1\n")
-		//fallback to par = 1
+		// fallback to par = 1
 		par = 1
 	}
 
@@ -69,7 +68,7 @@ func NewHttpDownloader(url string, par int, skipTls bool) *HttpDownloader {
 	clen := resp.Header.Get(contentLengthHeader)
 	if clen == "" {
 		log.Printf("Target URL does not contain Content-Length header. Fallback to parallel 1\n")
-		clen = "1" //set 1 because of progress bar not accept 0 length
+		clen = "1" // set 1 because progress bar does not not accept 0 length
 		par = 1
 		resumable = false
 	}
@@ -90,17 +89,17 @@ func NewHttpDownloader(url string, par int, skipTls bool) *HttpDownloader {
 	}
 
 	file := filepath.Base(url)
-	ret := new(HttpDownloader)
-	ret.url = url
-	ret.file = file
-	ret.par = int64(par)
-	ret.len = len
-	ret.ips = ipstr
-	ret.skipTls = skipTls
-	ret.parts = partCalculate(int64(par), len, url)
-	ret.resumable = resumable
+	downloader := new(HttpDownloader)
+	downloader.url = url
+	downloader.file = file
+	downloader.par = int64(par)
+	downloader.len = len
+	downloader.ips = ipstr
+	downloader.skipTls = skipTls
+	downloader.parts = partCalculate(int64(par), len, url)
+	downloader.resumable = resumable
 
-	return ret
+	return downloader
 }
 
 func partCalculate(par int64, len int64, url string) []Part {
@@ -136,8 +135,8 @@ func (d *HttpDownloader) Do(doneChan chan bool, fileChan chan string, errorChan 
 
 	if DisplayProgressBar() {
 		bars = make([]*pb.ProgressBar, 0)
-		for i, part := range d.parts {
-			newbar := pb.New64(part.RangeTo - part.RangeFrom).SetUnits(pb.U_BYTES).Prefix(color.YellowString(fmt.Sprintf("%s-%d", d.file, i)))
+		for _, part := range d.parts {
+			newbar := pb.New64(part.RangeTo-part.RangeFrom).Set(pb.Bytes, true)
 			bars = append(bars, newbar)
 		}
 		barpool, err = pb.StartPool(bars...)
@@ -161,7 +160,7 @@ func (d *HttpDownloader) Do(doneChan chan bool, fileChan chan string, errorChan 
 				ranges = fmt.Sprintf("bytes=%d-", part.RangeFrom) // get all
 			}
 
-			//send request
+			// send request
 			req, err := http.NewRequest("GET", d.url, nil)
 			if err != nil {
 				errorChan <- err
@@ -194,7 +193,7 @@ func (d *HttpDownloader) Do(doneChan chan bool, fileChan chan string, errorChan 
 
 			var writer io.Writer
 			if DisplayProgressBar() {
-				writer = io.MultiWriter(f, bar)
+				writer = bar.NewProxyWriter(f)
 			} else {
 				writer = io.MultiWriter(f)
 			}
