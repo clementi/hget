@@ -117,7 +117,7 @@ func partCalculate(par int64, len int64, url string) []Part {
 		file := filepath.Base(url)
 		folder := FolderOf(url)
 		if err := MkdirIfNotExist(folder); err != nil {
-			Errorf("%v", err)
+			log.Fatalf("%v", err)
 			os.Exit(1)
 		}
 
@@ -185,12 +185,12 @@ func (d *HttpDownloader) Do(doneChan chan bool, fileChan chan string, errorChan 
 			defer resp.Body.Close()
 			f, err := os.OpenFile(part.Path, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)
 
-			defer f.Close()
 			if err != nil {
-				Errorf("%v\n", err)
+				log.Fatalf("%v\n", err)
 				errorChan <- err
 				return
 			}
+			defer f.Close()
 
 			var writer io.Writer
 			if DisplayProgressBar() {

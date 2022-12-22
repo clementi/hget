@@ -1,18 +1,20 @@
 package main
 
 import (
-	"net"
-	"os"
-	"github.com/mattn/go-isatty"
-	"path/filepath"
 	"errors"
-	"strings"
+	"log"
+	"net"
 	"net/url"
+	"os"
+	"path/filepath"
+	"strings"
+
+	"github.com/mattn/go-isatty"
 )
 
 func FatalCheck(err error) {
 	if err != nil {
-		Errorf("%v", err)
+		log.Fatalf("%v", err)
 		panic(err)
 	}
 }
@@ -58,7 +60,7 @@ func FolderOf(url string) string {
 	FatalCheck(err)
 
 	if strings.Contains(relative, "..") {
-		FatalCheck(errors.New("you may be a victim of directory traversal path attack\n"))
+		FatalCheck(errors.New("you may be a victim of directory traversal path attack"))
 		return "" //return is redundant be cause in fatal check we have panic, but compiler does not able to check
 	} else {
 		return fullQualifyPath

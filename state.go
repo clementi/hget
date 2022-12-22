@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -26,7 +27,7 @@ func (s *State) Save() error {
 	//make temp folder
 	//only working in unix with env HOME
 	folder := FolderOf(s.Url)
-	Printf("Saving current download data in %s\n", folder)
+	log.Printf("Saving current download data in %s\n", folder)
 	if err := MkdirIfNotExist(folder); err != nil {
 		return err
 	}
@@ -46,7 +47,7 @@ func (s *State) Save() error {
 
 func Read(task string) (*State, error) {
 	file := filepath.Join(os.Getenv("HOME"), dataFolder, task, stateFileName)
-	Printf("Getting data from %s\n", file)
+	log.Printf("Getting data from %s\n", file)
 	bytes, err := ioutil.ReadFile(file)
 	if err != nil {
 		return nil, err

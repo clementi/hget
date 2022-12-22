@@ -63,12 +63,8 @@ func main() {
 						fmt.Println()
 						cli.ShowCommandHelpAndExit(ctx, "resume", 2)
 					}
-					var task string
-					if IsUrl(ctx.Args().First()) {
-						task = TaskFromUrl(task)
-					} else {
-						task = ctx.Args().First()
-					}
+					task := ctx.Args().First()
+					log.Printf("Task is %s\n", task)
 					state, err := Resume(task)
 					if err != nil {
 						return err
@@ -186,22 +182,22 @@ func Execute(url string, state *State, conn int, skiptls bool) {
 		case file := <-fileChan:
 			files = append(files, file)
 		case err := <-errorChan:
-			Errorf("%v", err)
+			log.Fatalf("%v", err)
 			panic(err) //maybe need better style
 		case part := <-stateChan:
 			parts = append(parts, part)
 		case <-doneChan:
 			if isInterrupted {
 				if downloader.resumable {
-					Printf("Interrupted, saving state ... \n")
+					log.Printf("Interrupted, saving state ... \n")
 					s := &State{Url: url, Parts: parts}
 					err := s.Save()
 					if err != nil {
-						Errorf("%v\n", err)
+						log.Fatalf("%v\n", err)
 					}
 					return
 				} else {
-					Warnf("Interrupted, but downloading url is not resumable, silently die")
+					log.Printf("Interrupted, but downloading url is not resumable, silently die")
 					return
 				}
 			} else {
