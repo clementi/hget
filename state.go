@@ -59,10 +59,14 @@ func Read(task string) (*State, error) {
 }
 
 func Delete(task string) error {
-	path := filepath.Join(os.Getenv("HOME"), dataFolder, task)
-	if _, err := os.Stat(path); err != nil {
+	dataPath := filepath.Join(os.Getenv("HOME"), dataFolder)
+	if err := MkdirIfNotExist(dataPath); err != nil {
 		return err
 	}
-	log.Printf("Deleting task %s\n", path)
-	return os.RemoveAll(path)
+	taskPath := filepath.Join(dataPath, task)
+	if _, err := os.Stat(taskPath); err != nil {
+		return err
+	}
+	log.Printf("Deleting task %s\n", taskPath)
+	return os.RemoveAll(taskPath)
 }
