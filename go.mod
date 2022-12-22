@@ -21,5 +21,5 @@ require (
 
 require (
 	github.com/VividCortex/ewma v1.1.1 // indirect
-	github.com/cheggaaa/pb/v3 v3.1.0 // indirect
+	github.com/cheggaaa/pb/v3 v3.1.0
 )
