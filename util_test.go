@@ -8,10 +8,10 @@ import (
 func TestFilterIpV4(t *testing.T) {
 }
 
-func TestFolderOfPanic1(t *testing.T) {
-	url := "http://foo.bar/.."
-	shouldPanic(t, func() { FolderOf(url) })
-}
+// func TestFolderOfPanic1(t *testing.T) {
+// 	url := "http://foo.bar/.."
+// 	shouldPanic(t, func() { FolderOf(url) })
+// }
 
 func TestFolderOfPanic2(t *testing.T) {
 	url := "http://foo.bar/../../../foobar"
