@@ -13,6 +13,10 @@ hget is a command-line, multipart, resumable downloader. It is based on [the pro
 go install github.com/clementi/hget@latest
 ```
 
+### Binaries
+
+Binaries for Windows, Linux, macOS (arm64 and amd64), FreeBSD, NetBSD amd OpenBSD are available at [Releases](https://github.com/clementi/hget/releases).
+
 ## Usage
 
 ```
