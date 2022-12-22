@@ -1,11 +1,13 @@
 package main
 
 import (
-	"gopkg.in/cheggaaa/pb.v1"
-	"github.com/fatih/color"
 	"io"
+	"log"
 	"os"
 	"sort"
+
+	"github.com/fatih/color"
+	"gopkg.in/cheggaaa/pb.v1"
 )
 
 func JoinFile(files []string, out string) error {
@@ -14,15 +16,15 @@ func JoinFile(files []string, out string) error {
 	var bar *pb.ProgressBar
 
 	if DisplayProgressBar() {
-		Printf("Start joining \n")
+		log.Printf("Start joining \n")
 		bar = pb.StartNew(len(files)).Prefix(color.CyanString("Joining"))
 	}
 
 	outf, err := os.OpenFile(out, os.O_CREATE|os.O_WRONLY, 0600)
-	defer outf.Close()
 	if err != nil {
 		return err
 	}
+	defer outf.Close()
 
 	for _, f := range files {
 		if err = copy(f, outf); err != nil {
@@ -40,13 +42,14 @@ func JoinFile(files []string, out string) error {
 	return nil
 }
 
-//this function split just to use defer
+// this function split just to use defer
 func copy(from string, to io.Writer) error {
 	f, err := os.OpenFile(from, os.O_RDONLY, 0600)
-	defer f.Close()
 	if err != nil {
 		return err
 	}
+	defer f.Close()
+
 	io.Copy(to, f)
 	return nil
 }

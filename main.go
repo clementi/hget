@@ -23,17 +23,24 @@ func main() {
 		Name:  "hget",
 		Usage: "Multipart resumable downloads",
 		Action: func(ctx *cli.Context) error {
-
 			if !ctx.Args().Present() {
 				fmt.Println("URL required")
 				fmt.Println()
 				cli.ShowAppHelpAndExit(ctx, 1)
 			}
 
-			url := ctx.Args().Get(0)
+			url := ctx.Args().First()
 
 			Execute(url, nil, int(ctx.Uint("connections")), ctx.Bool("skip-tls"))
 			return nil
+		},
+		Authors: []*cli.Author{
+			{
+				Name: "huydx (https://github.com/huydx)",
+			},
+			{
+				Name: "clementi (https://github.com/clementi)",
+			},
 		},
 		Version:         "2.0.0",
 		HideHelpCommand: true,
@@ -42,11 +49,33 @@ func main() {
 				Name:    "tasks",
 				Aliases: []string{"t"},
 				Usage:   "show current tasks",
+				Action: func(ctx *cli.Context) error {
+					return TaskPrint()
+				},
 			},
 			{
 				Name:    "resume",
 				Aliases: []string{"r"},
 				Usage:   "resume task",
+				Action: func(ctx *cli.Context) error {
+					if !ctx.Args().Present() {
+						fmt.Println("task name required")
+						fmt.Println()
+						cli.ShowCommandHelpAndExit(ctx, "resume", 2)
+					}
+					var task string
+					if IsUrl(ctx.Args().First()) {
+						task = TaskFromUrl(task)
+					} else {
+						task = ctx.Args().First()
+					}
+					state, err := Resume(task)
+					if err != nil {
+						return err
+					}
+					Execute(state.Url, state, int(ctx.Uint("connections")), ctx.Bool("skip-tls"))
+					return nil
+				},
 			},
 		},
 		Flags: []cli.Flag{

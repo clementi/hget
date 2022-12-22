@@ -3,9 +3,8 @@ package main
 import (
 	"crypto/tls"
 	"fmt"
-	"github.com/fatih/color"
-	pb "gopkg.in/cheggaaa/pb.v1"
 	"io"
+	"log"
 	"net"
 	"net/http"
 	stdurl "net/url"
@@ -14,6 +13,9 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/fatih/color"
+	pb "gopkg.in/cheggaaa/pb.v1"
 )
 
 var (
@@ -49,7 +51,7 @@ func NewHttpDownloader(url string, par int, skipTls bool) *HttpDownloader {
 	FatalCheck(err)
 
 	ipstr := FilterIPV4(ips)
-	Printf("Resolve ip: %s\n", strings.Join(ipstr, " | "))
+	log.Printf("Resolved IP(s): %s\n", strings.Join(ipstr, " | "))
 
 	req, err := http.NewRequest("GET", url, nil)
 	FatalCheck(err)
@@ -58,7 +60,7 @@ func NewHttpDownloader(url string, par int, skipTls bool) *HttpDownloader {
 	FatalCheck(err)
 
 	if resp.Header.Get(acceptRangeHeader) == "" {
-		Printf("Target url is not supported range download, fallback to parallel 1\n")
+		log.Printf("Target URL does not support range download. Fallback to parallel 1\n")
 		//fallback to par = 1
 		par = 1
 	}
@@ -66,13 +68,13 @@ func NewHttpDownloader(url string, par int, skipTls bool) *HttpDownloader {
 	//get download range
 	clen := resp.Header.Get(contentLengthHeader)
 	if clen == "" {
-		Printf("Target url not contain Content-Length header, fallback to parallel 1\n")
+		log.Printf("Target URL does not contain Content-Length header. Fallback to parallel 1\n")
 		clen = "1" //set 1 because of progress bar not accept 0 length
 		par = 1
 		resumable = false
 	}
 
-	Printf("Start download with %d connections \n", par)
+	log.Printf("Start download with %d connections \n", par)
 
 	len, err := strconv.ParseInt(clen, 10, 64)
 	FatalCheck(err)
@@ -80,11 +82,11 @@ func NewHttpDownloader(url string, par int, skipTls bool) *HttpDownloader {
 	sizeInMb := float64(len) / (1024 * 1024)
 
 	if clen == "1" {
-		Printf("Download size: not specified\n")
+		log.Printf("Download size not specified\n")
 	} else if sizeInMb < 1024 {
-		Printf("Download target size: %.1f MB\n", sizeInMb)
+		log.Printf("Download target size: %.1f MB\n", sizeInMb)
 	} else {
-		Printf("Download target size: %.1f GB\n", sizeInMb/1024)
+		log.Printf("Download target size: %.1f GB\n", sizeInMb/1024)
 	}
 
 	file := filepath.Base(url)
@@ -156,7 +158,7 @@ func (d *HttpDownloader) Do(doneChan chan bool, fileChan chan string, errorChan 
 			if part.RangeTo != d.len {
 				ranges = fmt.Sprintf("bytes=%d-%d", part.RangeFrom, part.RangeTo)
 			} else {
-				ranges = fmt.Sprintf("bytes=%d-", part.RangeFrom) //get all
+				ranges = fmt.Sprintf("bytes=%d-", part.RangeFrom) // get all
 			}
 
 			//send request
@@ -166,7 +168,7 @@ func (d *HttpDownloader) Do(doneChan chan bool, fileChan chan string, errorChan 
 				return
 			}
 
-			if d.par > 1 { //support range download just in case parallel factor is over 1
+			if d.par > 1 { // support range download just in case parallel factor is over 1
 				req.Header.Add("Range", ranges)
 				if err != nil {
 					errorChan <- err
@@ -174,7 +176,7 @@ func (d *HttpDownloader) Do(doneChan chan bool, fileChan chan string, errorChan 
 				}
 			}
 
-			//write to file
+			// write to file
 			resp, err := client.Do(req)
 			if err != nil {
 				errorChan <- err
@@ -197,7 +199,7 @@ func (d *HttpDownloader) Do(doneChan chan bool, fileChan chan string, errorChan 
 				writer = io.MultiWriter(f)
 			}
 
-			//make copy interruptable by copy 100 bytes each loop
+			// make copy interruptible by copy 100 bytes each loop
 			current := int64(0)
 			for {
 				select {

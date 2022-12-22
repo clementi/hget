@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -22,7 +23,7 @@ func TaskPrint() error {
 	}
 
 	folderString := strings.Join(folders, "\n")
-	Printf("Currently on going download: \n")
+	log.Printf("Tasks: \n")
 	fmt.Println(folderString)
 
 	return nil
