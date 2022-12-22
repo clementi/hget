@@ -21,8 +21,12 @@ func TaskPrint() error {
 		}
 	}
 
-	log.Println("Tasks:")
-	fmt.Println(strings.Join(taskNames, "\n"))
+	if len(taskNames) == 0 {
+		log.Println("No tasks")
+	} else {
+		log.Println("Tasks:")
+		fmt.Println(strings.Join(taskNames, "\n"))
+	}
 
 	return nil
 }
