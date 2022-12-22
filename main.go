@@ -151,7 +151,7 @@ func Execute(url string, state *State, conn int, skiptls bool) {
 	for {
 		select {
 		case <-signal_chan:
-			//send par number of interrupt for each routine
+			// send par number of interrupt for each routine
 			isInterrupted = true
 			for i := 0; i < conn; i++ {
 				interruptChan <- true
@@ -160,7 +160,7 @@ func Execute(url string, state *State, conn int, skiptls bool) {
 			files = append(files, file)
 		case err := <-errorChan:
 			log.Fatalf("%v", err)
-			panic(err) //maybe need better style
+			panic(err) // maybe need better style
 		case part := <-stateChan:
 			parts = append(parts, part)
 		case <-doneChan:
