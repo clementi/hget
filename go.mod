@@ -6,7 +6,6 @@ require (
 	github.com/fatih/color v1.13.0
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.16
-	gopkg.in/cheggaaa/pb.v1 v1.0.28
 )
 
 require (
