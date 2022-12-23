@@ -15,3 +15,7 @@ arch:
 	GOOS=netbsd  GOARCH=amd64 go build -o bin/${NAME}-netbsd-amd64
 	GOOS=openbsd GOARCH=amd64 go build -o bin/${NAME}-openbsd-amd64
 	GOOS=windows GOARCH=amd64 go build -o bin/${NAME}-windows-amd64.exe
+
+pack: arch
+	@for f in $$(ls bin --ignore='*.exe'); do tar cvJf "bin/$$f.tar.xz" "bin/$$f" && rm -f "bin/$$f"; done
+	@for f in $$(ls bin/*.exe); do zip -9 "bin/$$(basename "$$f" ".exe").zip" "$$f" && rm -f "$$f"; done
