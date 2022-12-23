@@ -6,8 +6,7 @@ import (
 	"os"
 	"sort"
 
-	"github.com/fatih/color"
-	"gopkg.in/cheggaaa/pb.v1"
+	"github.com/cheggaaa/pb/v3"
 )
 
 func JoinFile(files []string, out string) error {
@@ -17,7 +16,7 @@ func JoinFile(files []string, out string) error {
 
 	if DisplayProgressBar() {
 		log.Printf("Start joining \n")
-		bar = pb.StartNew(len(files)).Prefix(color.CyanString("Joining"))
+		bar = pb.StartNew(len(files))
 	}
 
 	outf, err := os.OpenFile(out, os.O_CREATE|os.O_WRONLY, 0600)
