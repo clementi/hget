@@ -46,7 +46,7 @@ GLOBAL OPTIONS:
 To interrupt any downloading process, just hit ctrl-c or ctrl-d during the download. hget will safely save your data to `$HOME/.hget` and you will be able to resume later.
 
 
-![Demo](https://github.com/clementi/hget/demo.gif)
+![Demo](https://github.com/clementi/hget/blob/main/demo.gif)
 
 <!-- ### Download
 ![](https://i.gyazo.com/89009c7f02fea8cb4cbf07ee5b75da0a.gif)
