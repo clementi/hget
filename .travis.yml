@@ -1,8 +1,0 @@
-sudo: false
-language: go
-go:
-  - 1.6.2
-  - tip
-script:
-  - make clean install
-  - go test
