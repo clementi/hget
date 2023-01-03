@@ -6,7 +6,7 @@
 
 hget is a command-line, multipart, resumable downloader. It is a fork of [the project by huydx](https://github.com/huydx/hget).
 
-![](https://i.gyazo.com/641166ab79e196e35d1a0ef3f9befd80.png)
+![](./rocket-1206.svg)
 
 ## Install
 
