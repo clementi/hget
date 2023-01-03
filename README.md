@@ -4,7 +4,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/clementi/hget)](https://goreportcard.com/report/github.com/clementi/hget)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/clementi/hget)](https://github.com/clementi/hget/releases)
 
-hget is a command-line, multipart, resumable downloader. It is based on [the project by huydx](https://github.com/huydx/hget).
+hget is a command-line, multipart, resumable downloader. It is a fork of [the project by huydx](https://github.com/huydx/hget).
 
 ![](https://i.gyazo.com/641166ab79e196e35d1a0ef3f9befd80.png)
 
