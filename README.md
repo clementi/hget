@@ -10,8 +10,17 @@ hget is a command-line, multipart, resumable downloader. It is a fork of [the pr
 
 ## Install
 
-```
+### Go Install
+
+```sh
 go install github.com/clementi/hget@latest
+```
+
+### Homebrew
+
+```sh
+brew tap clementi/homebrew-hget
+brew install hget
 ```
 
 ### Binaries
